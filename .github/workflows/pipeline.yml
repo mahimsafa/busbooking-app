@@ -35,6 +35,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: published-artifact
+          run: pwd && ls -al 
           path: ./dist
 
   deploy:
