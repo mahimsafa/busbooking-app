@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-          cache-dependency-path: './client/package-lock.json'
+          cache-dependency-path: "./client/package-lock.json"
       - name: Installing dependencies
         run: npm ci
       - name: Building client
@@ -31,25 +31,25 @@ jobs:
           REACT_APP_API_BASE_URL: http://3.145.115.170/api
         run: npm run build
       - name: File list
-        run: pwd && ls -al 
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: published-artifact
-  #         path: ./dist/*
+        run: pwd && ls -al
+      #     - name: Upload artifact
+      #       uses: actions/upload-artifact@v3
+      #       with:
+      #         name: published-artifact
+      #         path: ./dist/*
 
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
+      # deploy:
+      #   needs: build
+      #   runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Download artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: published-artifact
-  #         path: ./dist/*
-  #     - name: Current directory details
-  #       run: pwd && ls
+      #   steps:
+      #     - name: Download artifact
+      #       uses: actions/download-artifact@v3
+      #       with:
+      #         name: published-artifact
+      #         path: ./dist/*
+      #     - name: Current directory details
+      #       run: pwd && ls
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
         env:
@@ -67,8 +67,6 @@ jobs:
             sudo rm -rf /home/ubuntu/client/* 
             sudo systemctl restart nginx
 
-
-
   server:
     runs-on: ubuntu-latest
 
@@ -83,7 +81,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: File list
-        run: pwd && ls -al 
+        run: pwd && ls -al
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: "./client/package-lock.json"
+      - name: Installing dependencies
+        run: npm ci
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
         env:
