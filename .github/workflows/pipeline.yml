@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  client:
     runs-on: ubuntu-latest
 
     defaults:
@@ -64,4 +64,38 @@ jobs:
             ls -al
             sudo cp -R /home/ubuntu/client/* /var/www/app/
             sudo chown -R www-data:www-data /var/www/app
+            sudo rm -rf /home/ubuntu/client/* 
+            sudo systemctl restart nginx
+
+
+
+  server:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./server/
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: File list
+        run: pwd && ls -al 
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          SOURCE: "server/*"
+          REMOTE_HOST: ${{ secrets.PRODUCTION_DNS }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: /home/ubuntu/server/
+          SCRIPT_AFTER: |
+            whoami
+            ls -al
+            pm2 stop 0
+            pm2 delete 0
+            pm2 start /home/ubuntu/server/index.js
             sudo systemctl restart nginx
