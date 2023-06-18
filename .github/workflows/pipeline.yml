@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - name: Installing dependencies
-        run: npm ci
+        run: npm run installClient
       - name: Building client
         env:
           REACT_APP_API_BASE_URL: http://3.145.115.170/api
