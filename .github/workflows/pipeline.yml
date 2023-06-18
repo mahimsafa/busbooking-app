@@ -1,11 +1,12 @@
-name: Production deployment
+name: Bus Booking App CI/CD
 
 on:
   push:
     branches: ["main"]
 
 jobs:
-  client:
+  build:
+    name: React application building
     runs-on: ubuntu-latest
 
     defaults:
@@ -32,14 +33,17 @@ jobs:
         run: npm run build
       - name: File list
         run: pwd && ls -al
+
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: published-artifact
           path: client/dist/
 
-  clientDeploy:
-    needs: client
+  deploy:
+    name: React application deploying to server
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -50,6 +54,8 @@ jobs:
           path: client/dist/
       - name: Current directory details
         run: pwd && ls
+
+
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
         env:
@@ -57,7 +63,6 @@ jobs:
           SOURCE: "client/dist/*"
           REMOTE_HOST: ${{ secrets.PRODUCTION_DNS }}
           REMOTE_USER: ${{ secrets.USERNAME }}
-          # TARGET: ${{ secrets.TARGET }}
           TARGET: /home/ubuntu/client/
           SCRIPT_AFTER: |
             whoami
@@ -67,7 +72,9 @@ jobs:
             sudo rm -rf /home/ubuntu/client/* 
             sudo systemctl restart nginx
 
+
   server:
+    name: Backend setup to the server
     runs-on: ubuntu-latest
 
     defaults:
@@ -80,14 +87,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: File list
+      - name: Current directory details
         run: pwd && ls -al
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-          cache-dependency-path: "./client/package-lock.json"
+          cache-dependency-path: "./server/package-lock.json"
       - name: Installing dependencies
         run: npm ci
       - name: Deploy to Server
