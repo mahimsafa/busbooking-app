@@ -29,7 +29,7 @@ jobs:
       - name: Building client
         env:
           REACT_APP_API_BASE_URL: http://3.145.115.170/api
-        run: npm run buildClient
+        run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
