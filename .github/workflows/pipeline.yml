@@ -30,12 +30,12 @@ jobs:
         env:
           REACT_APP_API_BASE_URL: http://3.145.115.170/api
         run: npm run build
-
+      - name: File list
+        run: pwd && ls -al 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: published-artifact
-          run: pwd && ls -al 
           path: ./dist
 
   deploy:
