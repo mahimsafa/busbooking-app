@@ -25,7 +25,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: './client/package-lock.json'
       - name: Installing dependencies
-        run: npm run installClient
+        run: npm ci
       - name: Building client
         env:
           REACT_APP_API_BASE_URL: http://3.145.115.170/api
