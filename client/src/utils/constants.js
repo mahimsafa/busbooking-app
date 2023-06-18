@@ -15,7 +15,6 @@ export const cities = [
   "Rochester",
   "Delhi",
   "baby",
-,
 ];
 
 export const filters = [
