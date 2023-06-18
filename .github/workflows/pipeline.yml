@@ -32,24 +32,24 @@ jobs:
         run: npm run build
       - name: File list
         run: pwd && ls -al 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: published-artifact
-          path: ./dist/*
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: published-artifact
+  #         path: ./dist/*
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: published-artifact
-          path: ./dist/*
-      - name: Current directory details
-        run: pwd && ls
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: published-artifact
+  #         path: ./dist/*
+  #     - name: Current directory details
+  #       run: pwd && ls
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
         env:
